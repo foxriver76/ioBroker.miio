@@ -313,6 +313,7 @@ class Miio extends utils.Adapter {
                 autoDiscoverTimeout: parseInt(this.config.autoDiscoverTimeout || "30") //
             });
 
+            this.miioController.on("debug", /** @param {string} msg */ msg => this.log.debug(msg));
             this.miioController.on("info", /** @param {string} msg */ msg => this.log.info(msg));
             this.miioController.on("warning", /** @param {string} msg */ msg => this.log.warn(msg));
             this.miioController.on("error", /** @param {string} msg */ msg => {
