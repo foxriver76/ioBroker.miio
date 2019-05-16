@@ -24,3 +24,11 @@ admin/i18n
 
 # maintenance scripts
 maintenance/**
+
+installToib.sh 
+testClass.js
+test.js
+.vscode/
+.github/
+lib/Properties/generate.py
+lib/Properties/proplist
