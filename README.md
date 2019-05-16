@@ -50,6 +50,9 @@ This adapter controls devices which followed miIO protocol.
 
 
 ## Changelog
+### 0.0.7 (2019-05-17)
+* Add zhimi fan support
+
 ### 0.0.6 (2019-04-13)
 * Add power load for chuangmi plug
 

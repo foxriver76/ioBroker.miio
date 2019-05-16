@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "miio",
-        "version": "0.0.6",
+        "version": "0.0.7",
         "news": {
+            "0.0.7": {
+                "en": "Add zhimi fan support",
+                "de": "Fügen Sie Unterstützung für Zhimi-Fans hinzu",
+                "ru": "Добавить поддержку поклонников Жими",
+                "pt": "Adicionar zhimi fan support",
+                "nl": "Voeg ondersteuning toe voor zhimi-fans",
+                "fr": "Ajouter le support de fan zhimi",
+                "it": "Aggiungi il supporto per i fan di zhimi",
+                "es": "Añadir soporte para fan de zhimi",
+                "pl": "Dodaj obsługę wentylatora zhimi",
+                "zh-cn": "添加智米风扇支持"
+            },
             "0.0.6": {
                 "en": "Add power load for chuangmi plug",
                 "de": "Fügen Sie die Stromlast für den Chuangmi-Stecker hinzu",
