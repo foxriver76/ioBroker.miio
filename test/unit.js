@@ -39,7 +39,7 @@ tests.unit(path.join(__dirname, ".."), {
                 "desc": "show current device's MIIO model",
                 "name": "device model",
                 "read": true,
-                "role": "state",
+                "role": "info",
                 "type": "string",
                 "write": false
             },
