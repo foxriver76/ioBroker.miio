@@ -1,0 +1,37 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const humidifier_1 = require("../Type/humidifier");
+const tools_1 = require("../../tools");
+const command_1 = require("../../Commands/command");
+const property_1 = require("../../Properties/property");
+class MiioAdapterDeviceZhimiHumidifierV extends humidifier_1.MiioAdapterDeviceTypeHumidifier {
+    get deviceName() {
+        return "zhimi.humidifier.v";
+    }
+    get deviceType() {
+        return "VendorTypeVersionDevice";
+    }
+    get rwState() {
+        return tools_1.objectExtend(super.rwState, {
+            dryMode: {
+                command: new command_1.SetDry(),
+                property: new property_1.Dry(),
+            }
+        });
+    }
+    get roState() {
+        return tools_1.objectExtend(super.roState, {
+            fanSpeed: {
+                property: new property_1.Speed(),
+            },
+            waterRemain: {
+                property: new property_1.Depth(),
+            }
+        });
+    }
+    constructor(miioDev) {
+        super(miioDev);
+    }
+}
+exports.MiioAdapterDeviceZhimiHumidifierV = MiioAdapterDeviceZhimiHumidifierV;
+;
