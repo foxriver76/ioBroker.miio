@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const yeelink_light_1 = require("../VendorType/yeelink.light");
+const YeelinkLight = require("../VendorType/yeelink.light");
 const tools_1 = require("../../tools");
-class MiioAdapterDeviceYeelinkLightLamp extends yeelink_light_1.MiioAdapterDeviceYeelinkLight {
+class DeviceClass extends YeelinkLight.DeviceClass {
     get deviceName() {
         return "yeelink.light.lamp";
     }
@@ -20,5 +20,5 @@ class MiioAdapterDeviceYeelinkLightLamp extends yeelink_light_1.MiioAdapterDevic
         super(miioDev);
     }
 }
-exports.MiioAdapterDeviceYeelinkLightLamp = MiioAdapterDeviceYeelinkLightLamp;
+exports.DeviceClass = DeviceClass;
 ;

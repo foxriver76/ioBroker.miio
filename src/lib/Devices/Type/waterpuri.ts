@@ -22,7 +22,7 @@ import {
     ElecvalState
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceTypeWaterPuri extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "waterpuri";
     }

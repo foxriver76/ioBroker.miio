@@ -1,5 +1,5 @@
 import { MiioAdapterROState } from "../device";
-import { MiioAdapterDeviceTypePowerstrip } from "../Type/powerstrip";
+import * as Powerstrip from "../Type/powerstrip";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 import {
@@ -8,7 +8,7 @@ import {
     ElecLeakage
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceQmiPowerstrip extends MiioAdapterDeviceTypePowerstrip {
+export class DeviceClass extends Powerstrip.DeviceClass {
     public get deviceName() {
         return "qmi.powerstrip";
     }

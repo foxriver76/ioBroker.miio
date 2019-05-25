@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const airpurifier_1 = require("../Type/airpurifier");
+const Airpurifier = require("../Type/airpurifier");
 const tools_1 = require("../../tools");
 const command_1 = require("../../Commands/command");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDeviceZhimiAirpurifierV6 extends airpurifier_1.MiioAdapterDeviceTypeAirPurifier {
+class DeviceClass extends Airpurifier.DeviceClass {
     get deviceName() {
         return "zhimi.airpurifier.v6";
     }
@@ -59,5 +59,5 @@ class MiioAdapterDeviceZhimiAirpurifierV6 extends airpurifier_1.MiioAdapterDevic
         super(miioDev);
     }
 }
-exports.MiioAdapterDeviceZhimiAirpurifierV6 = MiioAdapterDeviceZhimiAirpurifierV6;
+exports.DeviceClass = DeviceClass;
 ;

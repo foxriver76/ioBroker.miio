@@ -9,7 +9,7 @@ import {
     Bright
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceTypeLight extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "light";
     }

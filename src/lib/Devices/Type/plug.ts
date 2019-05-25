@@ -8,7 +8,7 @@ import {
     Temperature
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceTypePlug extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "plug";
     }

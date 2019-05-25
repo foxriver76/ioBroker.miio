@@ -11,7 +11,7 @@ import {
     PowerConsumeRate
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceTypePowerstrip extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "powerstrip";
     }

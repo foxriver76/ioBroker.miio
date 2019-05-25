@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const philips_light_1 = require("../VendorType/philips.light");
+const PhilipsLight = require("../VendorType/philips.light");
 const tools_1 = require("../../tools");
 const command_1 = require("../../Commands/command");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDevicePhilipsLightMoonlight extends philips_light_1.MiioAdapterDevicePhilipsLight {
+class DeviceClass extends PhilipsLight.DeviceClass {
     get deviceName() {
         return "philips.light.moonlight";
     }
@@ -29,5 +29,5 @@ class MiioAdapterDevicePhilipsLightMoonlight extends philips_light_1.MiioAdapter
         super(miioDev);
     }
 }
-exports.MiioAdapterDevicePhilipsLightMoonlight = MiioAdapterDevicePhilipsLightMoonlight;
+exports.DeviceClass = DeviceClass;
 ;

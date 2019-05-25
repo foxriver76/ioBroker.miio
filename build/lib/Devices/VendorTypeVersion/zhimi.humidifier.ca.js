@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const humidifier_1 = require("../Type/humidifier");
+const Humidifier = require("../Type/humidifier");
 const tools_1 = require("../../tools");
 const command_1 = require("../../Commands/command");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDeviceZhimiHumidifierV extends humidifier_1.MiioAdapterDeviceTypeHumidifier {
+class DeviceClass extends Humidifier.DeviceClass {
     get deviceName() {
         return "zhimi.humidifier.v";
     }
@@ -33,5 +33,5 @@ class MiioAdapterDeviceZhimiHumidifierV extends humidifier_1.MiioAdapterDeviceTy
         super(miioDev);
     }
 }
-exports.MiioAdapterDeviceZhimiHumidifierV = MiioAdapterDeviceZhimiHumidifierV;
+exports.DeviceClass = DeviceClass;
 ;

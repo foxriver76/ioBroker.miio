@@ -1,5 +1,5 @@
 import { MiioAdapterRWState, MiioAdapterROState } from "../device";
-import { MiioAdapterDeviceTypeAirPurifier } from "../Type/airpurifier";
+import * as Airpurifier from "../Type/airpurifier";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 import {
@@ -16,7 +16,7 @@ import {
     ActSleep
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceZhimiAirpurifierM extends MiioAdapterDeviceTypeAirPurifier {
+export class DeviceClass extends Airpurifier.DeviceClass {
     public get deviceName() {
         return "zhimi.airpurifier.m";
     }

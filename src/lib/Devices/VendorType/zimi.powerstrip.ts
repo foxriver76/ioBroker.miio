@@ -1,5 +1,5 @@
 import { MiioAdapterRWState } from "../device";
-import { MiioAdapterDeviceTypePowerstrip } from "../Type/powerstrip";
+import * as Powerstrip from "../Type/powerstrip";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 import {
@@ -11,7 +11,7 @@ import {
     WifiLed
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceZimiPowerstrip extends MiioAdapterDeviceTypePowerstrip {
+export class DeviceClass extends Powerstrip.DeviceClass {
     public get deviceName() {
         return "zimi.powerstrip";
     }

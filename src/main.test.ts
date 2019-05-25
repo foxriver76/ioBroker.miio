@@ -47,18 +47,23 @@ function runOneDeviceTest(vendor: string, type: string, version: string, states:
         "type": "string",
         "write": false
     },
-    it(model, () => {
+    it(model, async () => {
         const id = deviceId++;
-        controller.registerDevice({
+        await controller.registerDevice({
             id: `miio:${id}`,
             management: {
                 model: `${model}`,
                 address: "127.0.0.1",
                 token: "ca82c4b695b908c0803779a606edaf3c"
             },
-            defineProperty: () => {},
-            updatePollDuration: () => {},
-            on: () => {}
+            destroy: () => {},
+            propertyUpdated: (p: string, v: any) => {},
+            call: (command: string, paras?: (string|number)[]) => {},
+            checkOk: () => {},
+            defineProperty: (prop: any, def?: any) => {},
+            updatePollDuration: (ms: number) => {},
+            on: (event: string, cb?: any) => {},
+            loadProperties: (props: any) => {return {};}
         }, true);
         const device = controller.deviceRegistered[id];
         expect(device.miioInfo).to.deep.equal({

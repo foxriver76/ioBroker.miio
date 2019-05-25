@@ -9,8 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
-/// <reference path="./miio-lite.d.ts" />
-// @ts-ignore
 const miio = require("miio-lite");
 ;
 ;
@@ -100,12 +98,12 @@ class Controller extends events_1.EventEmitter {
                 }
                 catch (e) {
                     try {
-                        DeviceClass = Promise.resolve().then(() => require(`./Devices/VendorType/${vendor}.${type}`));
+                        DeviceClass = yield Promise.resolve().then(() => require(`./Devices/VendorType/${vendor}.${type}`));
                         this.emit("info", `new ${vendor}.${type} device`);
                     }
                     catch (e) {
                         try {
-                            DeviceClass = Promise.resolve().then(() => require(`./Devices/Type/${type}`));
+                            DeviceClass = yield Promise.resolve().then(() => require(`./Devices/Type/${type}`));
                             this.emit("info", `new ${type} device`);
                         }
                         catch (e) {
@@ -115,7 +113,7 @@ class Controller extends events_1.EventEmitter {
                     }
                 }
             }
-            return new DeviceClass(dev);
+            return new DeviceClass.DeviceClass(dev);
         });
     }
     findDeviceDefineInfo(ip) {

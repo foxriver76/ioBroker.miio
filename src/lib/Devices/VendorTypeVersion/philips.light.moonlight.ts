@@ -1,5 +1,5 @@
 import { MiioAdapterRWState } from "../device";
-import { MiioAdapterDevicePhilipsLight } from "../VendorType/philips.light";
+import * as PhilipsLight from "../VendorType/philips.light";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 import {
@@ -11,7 +11,7 @@ import {
     Rgb
 } from "../../Properties/property";
 
-export class MiioAdapterDevicePhilipsLightMoonlight extends MiioAdapterDevicePhilipsLight {
+export class DeviceClass extends PhilipsLight.DeviceClass {
     public get deviceName() {
         return "philips.light.moonlight";
     }

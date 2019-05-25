@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const waterpuri_1 = require("../Type/waterpuri");
+const WaterPuri = require("../Type/waterpuri");
 const tools_1 = require("../../tools");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDeviceYunmiWaterpuri extends waterpuri_1.MiioAdapterDeviceTypeWaterPuri {
+class DeviceClass extends WaterPuri.DeviceClass {
     get deviceName() {
         return "yunmi.waterpuri";
     }
@@ -136,5 +136,5 @@ class MiioAdapterDeviceYunmiWaterpuri extends waterpuri_1.MiioAdapterDeviceTypeW
         });
     }
 }
-exports.MiioAdapterDeviceYunmiWaterpuri = MiioAdapterDeviceYunmiWaterpuri;
+exports.DeviceClass = DeviceClass;
 ;

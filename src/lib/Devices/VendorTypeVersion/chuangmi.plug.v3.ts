@@ -1,5 +1,5 @@
 import { MiioAdapterRWState, MiioAdapterROState } from "../device";
-import { MiioAdapterDeviceTypePlug } from "../Type/plug";
+import * as Plug from "../Type/plug";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 import {
@@ -14,7 +14,7 @@ import {
     GetPower
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceChuangmiPlugV3 extends MiioAdapterDeviceTypePlug {
+export class DeviceClass extends Plug.DeviceClass {
     public get deviceName() {
         return "chuangmi.plug.v3";
     }

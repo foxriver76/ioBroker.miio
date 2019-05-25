@@ -1,9 +1,9 @@
 import { MiioAdapterRWState } from "../device";
-import { MiioAdapterDeviceYeelinkLight } from "../VendorType/yeelink.light";
+import * as YeelinkLight from "../VendorType/yeelink.light";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 
-export class MiioAdapterDeviceYeelinkLightLamp extends MiioAdapterDeviceYeelinkLight {
+export class DeviceClass extends YeelinkLight.DeviceClass {
     public get deviceName() {
         return "yeelink.light.lamp";
     }

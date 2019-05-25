@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fan_1 = require("../Type/fan");
+const Fan = require("../Type/fan");
 const tools_1 = require("../../tools");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDeviceZhimiFanV3 extends fan_1.MiioAdapterDeviceTypeFan {
+class DeviceClass extends Fan.DeviceClass {
     get deviceName() {
         return "zhimi.fan.v3";
     }
@@ -36,5 +36,5 @@ class MiioAdapterDeviceZhimiFanV3 extends fan_1.MiioAdapterDeviceTypeFan {
         super(miioDev);
     }
 }
-exports.MiioAdapterDeviceZhimiFanV3 = MiioAdapterDeviceZhimiFanV3;
+exports.DeviceClass = DeviceClass;
 ;

@@ -27,7 +27,7 @@ import {
 } from "../../Properties/property";
 import { Device } from "miio-lite";
 
-export class MiioAdapterDeviceTypeAirFresh extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "airfresh";
     }

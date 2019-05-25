@@ -1,5 +1,5 @@
 import { MiioAdapterRWState, MiioAdapterROState } from "../device";
-import { MiioAdapterDeviceTypeFan } from "../Type/fan";
+import * as Fan from "../Type/fan";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 import {
@@ -15,7 +15,7 @@ import {
     BatState
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceZhimiFanV2 extends MiioAdapterDeviceTypeFan {
+export class DeviceClass extends Fan.DeviceClass {
     public get deviceName() {
         return "zhimi.fan.v2";
     }

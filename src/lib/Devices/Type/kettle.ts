@@ -17,7 +17,7 @@ import {
     DrinkTimeCount
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceTypeKettle extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "kettle";
     }

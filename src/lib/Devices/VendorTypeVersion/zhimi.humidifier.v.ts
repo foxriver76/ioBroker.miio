@@ -1,5 +1,5 @@
 import { MiioAdapterROState } from "../device";
-import { MiioAdapterDeviceTypeHumidifier } from "../Type/humidifier";
+import * as Humidifier from "../Type/humidifier";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 
@@ -7,7 +7,7 @@ import {
     ButtonPressed
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceZhimiHumidifierV extends MiioAdapterDeviceTypeHumidifier {
+export class DeviceClass extends Humidifier.DeviceClass {
     get deviceName() {
         return "zhimi.humidifier.v";
     }

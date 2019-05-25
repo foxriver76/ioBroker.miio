@@ -14,7 +14,7 @@ import {
     NightState
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceTypeAirMonitor extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "airmonitor";
     }

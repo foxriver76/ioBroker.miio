@@ -1,5 +1,5 @@
 import { MiioAdapterRWState, MiioAdapterROState } from "../device";
-import { MiioAdapterDeviceTypeWaterPuri } from "../Type/waterpuri";
+import * as WaterPuri from "../Type/waterpuri";
 import { Device } from "miio-lite";
 import { objectExtend } from "../../tools";
 import {
@@ -15,7 +15,7 @@ import {
     TTDS
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceYunmiWaterpuri extends MiioAdapterDeviceTypeWaterPuri {
+export class DeviceClass extends WaterPuri.DeviceClass {
     public get deviceName() {
         return "yunmi.waterpuri";
     }

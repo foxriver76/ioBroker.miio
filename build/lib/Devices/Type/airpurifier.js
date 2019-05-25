@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const device_1 = require("../device");
 const command_1 = require("../../Commands/command");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDeviceTypeAirPurifier extends device_1.MiioAdapterDevice {
+class DeviceClass extends device_1.MiioAdapterDevice {
     get deviceName() {
         return "airpurifier";
     }
@@ -64,5 +64,5 @@ class MiioAdapterDeviceTypeAirPurifier extends device_1.MiioAdapterDevice {
         super(miioDev);
     }
 }
-exports.MiioAdapterDeviceTypeAirPurifier = MiioAdapterDeviceTypeAirPurifier;
+exports.DeviceClass = DeviceClass;
 ;

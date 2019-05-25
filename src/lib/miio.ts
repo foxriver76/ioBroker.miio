@@ -1,6 +1,4 @@
 import { EventEmitter } from "events";
-/// <reference path="./miio-lite.d.ts" />
-// @ts-ignore
 import * as miio from "miio-lite";
 
 type ControllerDeviceMiioDevice = any;
@@ -130,11 +128,11 @@ export class Controller extends EventEmitter {
                 this.emit("info", `new ${vendor}.${type}.${versionN} device`);
             } catch(e) {
                 try {
-                    DeviceClass = import(`./Devices/VendorType/${vendor}.${type}`);
+                    DeviceClass = await import(`./Devices/VendorType/${vendor}.${type}`);
                     this.emit("info", `new ${vendor}.${type} device`);
                 } catch (e) {
                     try {
-                        DeviceClass = import(`./Devices/Type/${type}`);
+                        DeviceClass = await import(`./Devices/Type/${type}`);
                         this.emit("info", `new ${type} device`);
                     } catch (e) {
                         this.emit("warning", e);
@@ -143,7 +141,7 @@ export class Controller extends EventEmitter {
                 }
             }
         }
-        return new DeviceClass(dev);
+        return new DeviceClass.DeviceClass(dev);
     }
 
     private findDeviceDefineInfo(ip: string) {

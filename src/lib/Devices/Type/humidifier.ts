@@ -21,7 +21,7 @@ import {
     UseTime
 } from "../../Properties/property";
 
-export class MiioAdapterDeviceTypeHumidifier extends MiioAdapterDevice {
+export class DeviceClass extends MiioAdapterDevice {
     public get deviceName() {
         return "humidifier";
     }

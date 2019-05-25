@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const plug_1 = require("../Type/plug");
+const Plug = require("../Type/plug");
 const tools_1 = require("../../tools");
 const command_1 = require("../../Commands/command");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDeviceChuangmiPlugV1 extends plug_1.MiioAdapterDeviceTypePlug {
+class DeviceClass extends Plug.DeviceClass {
     get deviceName() {
         return "chuangmi.plug.v1";
     }
@@ -34,5 +34,5 @@ class MiioAdapterDeviceChuangmiPlugV1 extends plug_1.MiioAdapterDeviceTypePlug {
         super(miioDev);
     }
 }
-exports.MiioAdapterDeviceChuangmiPlugV1 = MiioAdapterDeviceChuangmiPlugV1;
+exports.DeviceClass = DeviceClass;
 ;

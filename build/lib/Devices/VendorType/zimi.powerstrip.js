@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const powerstrip_1 = require("../Type/powerstrip");
+const Powerstrip = require("../Type/powerstrip");
 const tools_1 = require("../../tools");
 const command_1 = require("../../Commands/command");
 const property_1 = require("../../Properties/property");
-class MiioAdapterDeviceZimiPowerstrip extends powerstrip_1.MiioAdapterDeviceTypePowerstrip {
+class DeviceClass extends Powerstrip.DeviceClass {
     get deviceName() {
         return "zimi.powerstrip";
     }
@@ -27,5 +27,5 @@ class MiioAdapterDeviceZimiPowerstrip extends powerstrip_1.MiioAdapterDeviceType
         super(miioDev);
     }
 }
-exports.MiioAdapterDeviceZimiPowerstrip = MiioAdapterDeviceZimiPowerstrip;
+exports.DeviceClass = DeviceClass;
 ;
