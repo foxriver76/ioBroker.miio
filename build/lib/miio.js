@@ -33,7 +33,7 @@ class Controller extends events_1.EventEmitter {
         for (let i = 0; i < this.devicesDefined.length; i++) {
             const dev = this.devicesDefined[i];
             miio.device({
-                address: dev.ip,
+                // Only use token to discover devices.
                 token: dev.token
             }).then((dev) => {
                 this.registerDevice(dev, false);
@@ -116,14 +116,14 @@ class Controller extends events_1.EventEmitter {
             return new DeviceClass.DeviceClass(dev);
         });
     }
-    findDeviceDefineInfo(ip) {
+    findDeviceDefineInfo(token) {
         for (let i = 0; i < this.devicesDefined.length; i++) {
             const dev = this.devicesDefined[i];
-            if (dev.ip == ip) {
+            if (dev.token == token) {
                 return dev;
             }
         }
-        return null;
+        return {};
     }
     unregisterDevice(dev) {
         const miioID = dev.id.replace(/^miio:/, "");
@@ -180,15 +180,15 @@ class Controller extends events_1.EventEmitter {
                     version: miioDeviceVersion,
                     model: mgmt.model,
                 },
-                configData: this.findDeviceDefineInfo(mgmt.address) || {
-                    name: mgmt.model,
+                configData: {
+                    name: this.findDeviceDefineInfo(mgmt.token).name || mgmt.model,
                     ip: mgmt.address,
-                    token: mgmt.token
+                    token: mgmt.token,
+                    polling: this.findDeviceDefineInfo(mgmt.token).polling || device.polling,
                 },
                 autoDiscovered: isAutoDiscovered,
                 device: device
             };
-            this.deviceRegistered[miioID].configData.polling = this.deviceRegistered[miioID].configData.polling || device.polling;
             let pollingMs = this.deviceRegistered[miioID].configData.polling;
             if (pollingMs !== undefined) {
                 if (pollingMs < 3000) {

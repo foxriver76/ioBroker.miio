@@ -312,6 +312,25 @@ class Miio extends utils.Adapter {
         }
     }
 
+    private miioAdapterUpdateConfig(configData: miio.OptionDeviceDefine) {
+        for (let i = 0; i < this.config.devices.length; i++) {
+            if (configData.token === this.config.devices[i].token) {
+                if ((configData.ip === this.config.devices[i].ip) && (configData.polling === this.config.devices[i].polling)) {
+                    return;
+                }
+                this.config.devices[i].ip = configData.ip;
+                this.config.devices[i].polling = configData.polling;
+                this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}`);
+                this.updateConfig(this.config);
+                return;
+            }
+        }
+        // New discovered device
+        this.config.devices.push(configData);
+        this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}`);
+        this.updateConfig(this.config);
+    }
+
     private miioAdapterInit() {
         this.readObjects(() => {
             this.setConnected(false);
@@ -322,6 +341,7 @@ class Miio extends utils.Adapter {
                     this.log.error("No device defined and discover is also disabled.");
                 }
             }
+
             this.miioController = new miio.Controller({
                 devicesDefined: this.config.devices,
                 autoDiscover: this.config.autoDiscover,
@@ -340,6 +360,7 @@ class Miio extends utils.Adapter {
                 if (opt === "add") {
                     if (!this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
                         this.log.info(`New device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                        this.miioAdapterUpdateConfig(dev.configData);
                         this.miioAdapterCreateDevice(dev);
                     } else {
                         this.log.info(`Known device: ${dev.miioInfo.model} ${dev.miioInfo.id}`);
