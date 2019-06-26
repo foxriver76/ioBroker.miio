@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "miio",
-        "version": "0.0.7",
+        "version": "0.0.8",
         "news": {
+            "0.0.8": {
+                "en": "NEED UPLOAD MANUALLY！ use TS instead nodejs. Sync device ip based on token ",
+                "de": "NOTWENDIGES MANUELLES HOCHLADEN！ Verwenden Sie TS anstelle von nodejs. Synchronisieren Sie die Geräte-IP anhand des Tokens",
+                "ru": "НЕОБХОДИМО ЗАГРУЗИТЬ ВРУЧНУЮ！ используйте TS вместо nodejs. Синхронизировать ip устройства на основе токена",
+                "pt": "PRECISA DE CARREGAR MANUALMENTE！ use TS em vez de nodejs. Sincronizar o dispositivo ip com base no token",
+                "nl": "UPLOAD MANUEEL NODIG! Gebruik TS in plaats daarvan nodejs. Apparaat synchroniseren op basis van token",
+                "fr": "NEED UPLOAD MANUALLY！ utilisez TS à la place de nodejs. Synchroniser l'ip de l'appareil en fonction du jeton",
+                "it": "BISOGNO DI UPLOAD MANUALMENTE! Usa TS invece nodejs. Sincronizza l'ip del dispositivo in base al token",
+                "es": "NECESITA CARGAR MANUALMENTE！ use TS en lugar de nodejs. Dispositivo de sincronización ip basado en token",
+                "pl": "POTRZEBUJ RĘCZNIE PRZESYŁAJ！ użyj TS zamiast nodejs. Synchronizuj urządzenie IP na podstawie tokena",
+                "zh-cn": "需要手动上传！使用TS代替nodejs。基于token同步设备ip"
+            },
             "0.0.7": {
                 "en": "Add zhimi fan support",
                 "de": "Fügen Sie Unterstützung für Zhimi-Fans hinzu",
