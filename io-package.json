@@ -120,11 +120,14 @@
             "ioBroker",
             "template",
             "Smart Home",
-            "home automation"
+            "home automation",
+            "xiaomi",
+            "miio",
+            "mijia"
         ],
         "license": "MIT",
         "platform": "Javascript/Node.js",
-        "main": "main.js",
+        "main": "build/main.js",
         "icon": "miio.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/smarthomefans/ioBroker.miio/master/admin/miio.png",
@@ -134,10 +137,12 @@
         "type": "iot-systems",
         "compact": true,
         "materialize": true,
-        "materializeTab": true,
         "dependencies": [
             {
                 "admin": ">=3.0.0"
+            },
+            {
+                "js-controller": ">=1.4.2"
             }
         ]
     },
@@ -147,5 +152,27 @@
         "devices": []
     },
     "objects": [],
-    "instanceObjects": []
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }
