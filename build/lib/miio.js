@@ -23,9 +23,36 @@ class Controller extends events_1.EventEmitter {
         this.autoDiscoverTimeout = options.autoDiscoverTimeout || 30;
         this.deviceRegistered = {};
     }
+    discoverDevices(timeoutS) {
+        this.browser = miio.browse({
+            cacheTime: 1800
+        });
+        this.browser.on("available", (reg) => {
+            if (!reg.token) {
+                this.emit("info", reg.id + " token is hide");
+                return;
+            }
+            if (!reg.id) {
+                this.emit("info", "Cannot add device without Device ID");
+                return;
+            }
+            miio.device(reg).then((dev) => {
+                this.registerDevice(dev, true);
+            }).catch((e) => {
+                this.emit("warning", reg.id + " can not be connected." + e);
+            });
+        });
+        setTimeout(() => {
+            this.emit("info", `discover stoped after ${timeoutS} seconds.`);
+            this.browser.stop();
+        }, timeoutS * 1000);
+    }
     stop() {
         for (const id in this.deviceRegistered) {
             this.deviceRegistered[id].device.miioDevice.destroy();
+        }
+        if (this.browser) {
+            this.browser.stop();
         }
     }
     listen() {
@@ -43,24 +70,7 @@ class Controller extends events_1.EventEmitter {
         }
         // Discover devices
         if (this.autoDiscover) {
-            const browser = miio.browse({
-                cacheTime: this.autoDiscoverTimeout
-            });
-            browser.on("available", (reg) => {
-                if (!reg.token) {
-                    this.emit("info", reg.id + " token is hide");
-                    return;
-                }
-                if (!reg.id) {
-                    this.emit("info", "Cannot add device without Device ID");
-                    return;
-                }
-                miio.device(reg).then((dev) => {
-                    this.registerDevice(dev, true);
-                }).catch((e) => {
-                    this.emit("warning", reg.id + " can not be connected." + e);
-                });
-            });
+            this.discoverDevices(this.autoDiscoverTimeout);
         }
         return;
     }

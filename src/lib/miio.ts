@@ -36,6 +36,7 @@ export class Controller extends EventEmitter {
     private devicesDefined: OptionDeviceDefine[];
     private autoDiscover: boolean;
     private autoDiscoverTimeout: number;
+    private browser?: any;
     // TODO: fix. Only need public for test
     public deviceRegistered: Record<string, Device>;
 
@@ -49,9 +50,41 @@ export class Controller extends EventEmitter {
         this.deviceRegistered = {};
     }
 
+    public discoverDevices(timeoutS: number) {
+        this.browser = miio.browse({
+            cacheTime: 1800
+        });
+
+        this.browser.on("available", (reg: miio.RegisterInfo) => {
+            if (!reg.token) {
+                this.emit("info", reg.id + " token is hide");
+                return;
+            }
+            if (!reg.id) {
+                this.emit("info", "Cannot add device without Device ID");
+                return;
+            }
+            miio.device(
+                reg
+            ).then((dev: miio.Device) => {
+                this.registerDevice(dev, true);
+            }).catch((e: string) => {
+                this.emit("warning", reg.id + " can not be connected." + e);
+            });
+        });
+
+        setTimeout(() => {
+            this.emit("info", `discover stoped after ${timeoutS} seconds.`);
+            this.browser.stop();
+        }, timeoutS * 1000);
+    }
+
     public stop() {
         for (const id in this.deviceRegistered) {
             this.deviceRegistered[id].device.miioDevice.destroy();
+        }
+        if (this.browser) {
+            this.browser.stop();
         }
     }
 
@@ -72,27 +105,7 @@ export class Controller extends EventEmitter {
 
         // Discover devices
         if (this.autoDiscover) {
-            const browser = miio.browse({
-                cacheTime: this.autoDiscoverTimeout
-            });
-
-            browser.on("available", (reg: miio.RegisterInfo) => {
-                if (!reg.token) {
-                    this.emit("info", reg.id + " token is hide");
-                    return;
-                }
-                if (!reg.id) {
-                    this.emit("info", "Cannot add device without Device ID");
-                    return;
-                }
-                miio.device(
-                    reg
-                ).then((dev: miio.Device) => {
-                    this.registerDevice(dev, true);
-                }).catch((e: string) => {
-                    this.emit("warning", reg.id + " can not be connected." + e);
-                });
-            });
+            this.discoverDevices(this.autoDiscoverTimeout);
         }
         return;
     }
