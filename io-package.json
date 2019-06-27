@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "miio",
-        "version": "0.0.8",
+        "version": "0.0.9",
         "news": {
+            "0.0.9": {
+                "en": "Fix delete device and discover devices issue",
+                "de": "Behebung eines Problems mit dem Löschen von Geräten und Ermitteln von Geräten",
+                "ru": "Исправить удаление устройства и обнаружить проблему устройств",
+                "pt": "Corrigir dispositivo de exclusão e descobrir problemas de dispositivos",
+                "nl": "Fix verwijder apparaat en ontdek apparaten probleem",
+                "fr": "Résolution du problème de suppression de périphérique et de découverte de périphériques",
+                "it": "Risolvi il problema con il dispositivo di eliminazione e scopri i dispositivi",
+                "es": "Arreglar eliminar dispositivo y descubrir problema de dispositivos",
+                "pl": "Napraw usunięcie urządzenia i wykrycie problemu z urządzeniami",
+                "zh-cn": "修复删除设备并发现设备问题"
+            },
             "0.0.8": {
                 "en": "NEED UPLOAD MANUALLY！ use TS instead nodejs. Sync device ip based on token ",
                 "de": "NOTWENDIGES MANUELLES HOCHLADEN！ Verwenden Sie TS anstelle von nodejs. Synchronisieren Sie die Geräte-IP anhand des Tokens",
