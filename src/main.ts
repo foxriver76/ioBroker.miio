@@ -75,7 +75,7 @@ class Miio extends utils.Adapter {
         // in this template all states changes inside the adapters namespace are subscribed
         this.subscribeStates("*");
 
-        this.miioAdapterInit();
+        await this.miioAdapterInit();
     }
 
     /**
@@ -331,66 +331,68 @@ class Miio extends utils.Adapter {
         this.updateConfig(this.config);
     }
 
-    private miioAdapterInit() {
-        this.readObjects(() => {
-            this.setConnected(false);
-            if (!this.config ||
-                !this.config.devices ||
-                ("[]" === JSON.stringify(this.config.devices))) {
-                if (!this.config.autoDiscover) {
-                    this.log.error("No device defined and discover is also disabled.");
-                }
-            }
-
-            this.miioController = new miio.Controller({
-                devicesDefined: this.config.devices,
-                autoDiscover: this.config.autoDiscover,
-                autoDiscoverTimeout: parseInt(this.config.autoDiscoverTimeout || "30") //
-            });
-
-            this.miioController.on("debug", /** @param {string} msg */ msg => this.log.debug(msg));
-            this.miioController.on("info", /** @param {string} msg */ msg => this.log.info(msg));
-            this.miioController.on("warning", /** @param {string} msg */ msg => this.log.warn(msg));
-            this.miioController.on("error", /** @param {string} msg */ msg => {
-                this.log.error(msg);
-                this.miioAdapterStop();
-            });
-            // New device need add to adapter.
-            this.miioController.on("device", (/** @param {AdapterMiio.ControllerDevice} dev */ dev, /** @param {string} opt */ opt) => {
-                if (opt === "add") {
-                    if (!this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
-                        this.log.info(`New device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
-                        this.miioAdapterUpdateConfig(dev.configData);
-                        this.miioAdapterCreateDevice(dev);
-                    } else {
-                        this.log.info(`Known device: ${dev.miioInfo.model} ${dev.miioInfo.id}`);
+    private async miioAdapterInit() {
+        return new Promise((resolve, reject) => {
+            this.readObjects(async () => {
+                this.setConnected(false);
+                if (!this.config ||
+                    !this.config.devices ||
+                    ("[]" === JSON.stringify(this.config.devices))) {
+                    if (!this.config.autoDiscover) {
+                        this.log.error("No device defined and discover is also disabled.");
                     }
-                } else if (opt === "delete") {
-                    if (this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
-                        this.miioAdapterDeleteDevice(dev);
-                        this.log.info(`Delete device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                }
+
+                this.miioController = new miio.Controller({
+                    devicesDefined: this.config.devices,
+                    autoDiscover: this.config.autoDiscover,
+                    autoDiscoverTimeout: parseInt(this.config.autoDiscoverTimeout || "30")
+                });
+
+                this.miioController.on("debug", /** @param {string} msg */ msg => this.log.debug(msg));
+                this.miioController.on("info", /** @param {string} msg */ msg => this.log.info(msg));
+                this.miioController.on("warning", /** @param {string} msg */ msg => this.log.warn(msg));
+                this.miioController.on("error", /** @param {string} msg */ msg => {
+                    this.log.error(msg);
+                    this.miioAdapterStop();
+                });
+                // New device need add to adapter.
+                this.miioController.on("device", (/** @param {AdapterMiio.ControllerDevice} dev */ dev, /** @param {string} opt */ opt) => {
+                    if (opt === "add") {
+                        if (!this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
+                            this.log.info(`New device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                            this.miioAdapterUpdateConfig(dev.configData);
+                            this.miioAdapterCreateDevice(dev);
+                        } else {
+                            this.log.info(`Known device: ${dev.miioInfo.model} ${dev.miioInfo.id}`);
+                        }
+                    } else if (opt === "delete") {
+                        if (this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
+                            this.miioAdapterDeleteDevice(dev);
+                            this.log.info(`Delete device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                        } else {
+                            this.log.info(`Want to delete a non-registered device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                        }
                     } else {
-                        this.log.info(`Want to delete a non-registered device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                        this.log.warn(`Unsupported device event operation "${opt}".`);
                     }
-                } else {
-                    this.log.warn(`Unsupported device event operation "${opt}".`);
-                }
+                });
+                this.miioController.on("data",
+                    /**
+                     * @param {string} id
+                     * @param {string} state
+                     * @param {any} val
+                     */
+                    (id, state, val) => {
+                        this.miioAdapterUpdateState(this.generateSelfChannelID(id), state, val);
+                    }
+                );
+                await this.miioController.listen();
+                this.setConnected(true);
+                resolve();
             });
-            this.miioController.on("data",
-                /**
-                 * @param {string} id
-                 * @param {string} state
-                 * @param {any} val
-                 */
-                (id, state, val) => {
-                    this.miioAdapterUpdateState(this.generateSelfChannelID(id), state, val);
-                }
-            );
-            this.miioController.listen();
-            this.setConnected(true);
         });
     }
-
 }
 
 if (module.parent) {

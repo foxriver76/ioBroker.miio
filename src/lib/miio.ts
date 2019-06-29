@@ -88,23 +88,26 @@ export class Controller extends EventEmitter {
         }
     }
 
-    public listen() {
+    public async listen() {
         // Connect to user defined device
         for (let i = 0; i < this.devicesDefined.length; i++) {
             const dev = this.devicesDefined[i];
 
-            miio.device({
+            await miio.device({
                 // Only use token to discover devices.
                 token: dev.token
-            }).then((dev: miio.Device) => {
-                this.registerDevice(dev, false);
+            }).then((d: miio.Device) => {
+                this.emit("info", dev.ip + " added.");
+                this.registerDevice(d, false);
             }).catch((e: string) => {
                 this.emit("warning", dev.ip + " can not be connected." + e);
             });
         }
+        this.emit("info", "All defined devices are created");
 
         // Discover devices
         if (this.autoDiscover) {
+            this.emit("info", "Start auto discover");
             this.discoverDevices(this.autoDiscoverTimeout);
         }
         return;
