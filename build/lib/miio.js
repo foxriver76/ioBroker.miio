@@ -61,7 +61,7 @@ class Controller extends events_1.EventEmitter {
             for (let i = 0; i < this.devicesDefined.length; i++) {
                 const dev = this.devicesDefined[i];
                 yield miio.device({
-                    // Only use token to discover devices.
+                    address: dev.ip,
                     token: dev.token
                 }).then((d) => {
                     this.emit("info", dev.ip + " added.");

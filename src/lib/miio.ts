@@ -95,7 +95,7 @@ export class Controller extends EventEmitter {
             const dev = this.devicesDefined[i];
 
             await miio.device({
-                // Only use token to discover devices.
+                address: dev.ip,
                 token: dev.token
             }).then((d: miio.Device) => {
                 this.emit("info", dev.ip + " added.");
