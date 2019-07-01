@@ -268,19 +268,20 @@ class Miio extends utils.Adapter {
     miioAdapterUpdateConfig(configData) {
         for (let i = 0; i < this.config.devices.length; i++) {
             if (configData.token === this.config.devices[i].token) {
-                if ((configData.ip === this.config.devices[i].ip) && (configData.polling === this.config.devices[i].polling)) {
+                if ((configData.ip === this.config.devices[i].ip) && (configData.polling === this.config.devices[i].polling) && (configData.id === this.config.devices[i].id)) {
                     return;
                 }
                 this.config.devices[i].ip = configData.ip;
                 this.config.devices[i].polling = configData.polling;
-                this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}`);
+                this.config.devices[i].id = configData.id;
+                this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}, id = ${configData.id}`);
                 this.updateConfig(this.config);
                 return;
             }
         }
         // New discovered device
         this.config.devices.push(configData);
-        this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}`);
+        this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}, id = ${configData.id}`);
         this.updateConfig(this.config);
     }
     miioAdapterInit() {

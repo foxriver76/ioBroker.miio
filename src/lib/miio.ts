@@ -5,6 +5,7 @@ type ControllerDeviceMiioDevice = any;
 export interface OptionDeviceDefine {
     token?: string;
     ip?: string;
+    id?: string;
     name?: string;
     polling?: number;
 };
