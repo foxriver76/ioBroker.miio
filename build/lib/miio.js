@@ -56,23 +56,28 @@ class Controller extends events_1.EventEmitter {
         }
     }
     listen() {
-        // Connect to user defined device
-        for (let i = 0; i < this.devicesDefined.length; i++) {
-            const dev = this.devicesDefined[i];
-            miio.device({
-                // Only use token to discover devices.
-                token: dev.token
-            }).then((dev) => {
-                this.registerDevice(dev, false);
-            }).catch((e) => {
-                this.emit("warning", dev.ip + " can not be connected." + e);
-            });
-        }
-        // Discover devices
-        if (this.autoDiscover) {
-            this.discoverDevices(this.autoDiscoverTimeout);
-        }
-        return;
+        return __awaiter(this, void 0, void 0, function* () {
+            // Connect to user defined device
+            for (let i = 0; i < this.devicesDefined.length; i++) {
+                const dev = this.devicesDefined[i];
+                yield miio.device({
+                    address: dev.ip,
+                    token: dev.token
+                }).then((d) => {
+                    this.emit("info", dev.ip + " added.");
+                    this.registerDevice(d, false);
+                }).catch((e) => {
+                    this.emit("warning", dev.ip + " can not be connected." + e);
+                });
+            }
+            this.emit("info", "All defined devices are created");
+            // Discover devices
+            if (this.autoDiscover) {
+                this.emit("info", "Start auto discover");
+                this.discoverDevices(this.autoDiscoverTimeout);
+            }
+            return;
+        });
     }
     setState(id, state, val) {
         return __awaiter(this, void 0, void 0, function* () {

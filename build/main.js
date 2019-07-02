@@ -18,14 +18,27 @@ const miio = require("./lib/miio");
 class Miio extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign({}, options, { name: "miio" }));
+        /**
+         * Save latest miio adapter objects.
+         */
+        this.miioObjects = {};
+        /**
+         * Save objects that updated before created.
+         */
+        this.delayed = {};
+        /**
+         * Save objects that needed to register.
+         */
+        this.tasks = [];
+        /**
+         * miio Controller
+         * @type {}
+         */
+        this.miioController = null;
         this.on("ready", this.onReady.bind(this));
         this.on("stateChange", this.onStateChange.bind(this));
         // this.on("message", this.onMessage.bind(this));
         this.on("unload", this.onUnload.bind(this));
-        this.miioObjects = {};
-        this.delayed = {};
-        this.tasks = [];
-        this.miioController = null;
     }
     /**
      * Is called when databases are connected and adapter received configuration.
@@ -37,7 +50,8 @@ class Miio extends utils.Adapter {
             this.setConnected(false);
             // in this template all states changes inside the adapters namespace are subscribed
             this.subscribeStates("*");
-            this.miioAdapterInit();
+            yield this.miioAdapterInit();
+            this.log.debug(`Adapter init done!!!!!!`);
         });
     }
     /**
@@ -115,9 +129,8 @@ class Miio extends utils.Adapter {
      */
     readObjects(callback) {
         this.getForeignObjects(this.getObjectIDPrefix() + ".*", (err, list) => {
-            // Read miio objects in database. This maybe set in prevrous running status.
-            // No need set namespace
-            this.subscribeStates("devices.*");
+            // Read miio objects in database. This maybe set in previous running status.
+            // This can restore user defined object parameters.
             this.miioObjects = list;
             callback && callback();
         });
@@ -135,6 +148,9 @@ class Miio extends utils.Adapter {
     miioAdapterSyncObjects(instant) {
         function isStateObject(obj) {
             return obj.type === "state";
+        }
+        function isChannelObject(obj) {
+            return obj.type === "channel";
         }
         // This obj is obj with new value
         const obj = instant.tasks.shift();
@@ -163,7 +179,8 @@ class Miio extends utils.Adapter {
                 for (const a in obj.common) {
                     if (obj.common.hasOwnProperty(a)) {
                         if (!oObj.common[a] ||
-                            ((a != "name") && (a !== "icon") && (a !== "role") && oObj.common[a] !== obj.common[a])) {
+                            ((a != "name") && (a !== "icon") && (a !== "role") && (a !== "custom") &&
+                                oObj.common[a] !== obj.common[a])) {
                             // object value need update.
                             changed = true;
                             oObj.common[a] = obj.common[a];
@@ -173,6 +190,47 @@ class Miio extends utils.Adapter {
                 if (JSON.stringify(obj.native) !== JSON.stringify(oObj.native)) {
                     changed = true;
                     oObj.native = obj.native;
+                }
+                // The newest data is saved in oObj.
+                instant.miioObjects[instant.namespace + "." + obj._id] = oObj;
+                if (changed) {
+                    instant.extendObject(oObj._id, oObj, () => {
+                        if (instant.delayed[oObj._id] !== undefined) {
+                            instant.setState(oObj._id, instant.delayed[oObj._id], true, () => {
+                                delete instant.delayed[oObj._id];
+                                setImmediate(instant.miioAdapterSyncObjects, instant);
+                            });
+                        }
+                        else {
+                            setImmediate(instant.miioAdapterSyncObjects, instant);
+                        }
+                    });
+                }
+                else {
+                    if (instant.delayed[oObj._id] !== undefined) {
+                        instant.setState(oObj._id, instant.delayed[oObj._id], true, () => {
+                            delete instant.delayed[oObj._id];
+                            setImmediate(instant.miioAdapterSyncObjects, instant);
+                        });
+                    }
+                    else {
+                        setImmediate(instant.miioAdapterSyncObjects, instant);
+                    }
+                }
+            }
+            else if (isChannelObject(oObj) && isChannelObject(obj)) {
+                //Database contains obj._id object. Check whether update is needed.
+                let changed = false;
+                for (const a in obj.common) {
+                    if (obj.common.hasOwnProperty(a)) {
+                        if (!oObj.common[a] ||
+                            ((a != "name") && (a !== "icon") && (a !== "custom") &&
+                                oObj.common[a] !== obj.common[a])) {
+                            // object value need update.
+                            changed = true;
+                            oObj.common[a] = obj.common[a];
+                        }
+                    }
                 }
                 // The newest data is saved in oObj.
                 instant.miioObjects[instant.namespace + "." + obj._id] = oObj;
@@ -268,79 +326,85 @@ class Miio extends utils.Adapter {
     miioAdapterUpdateConfig(configData) {
         for (let i = 0; i < this.config.devices.length; i++) {
             if (configData.token === this.config.devices[i].token) {
-                if ((configData.ip === this.config.devices[i].ip) && (configData.polling === this.config.devices[i].polling)) {
+                if ((configData.ip === this.config.devices[i].ip) && (configData.polling === this.config.devices[i].polling) && (configData.id === this.config.devices[i].id)) {
                     return;
                 }
                 this.config.devices[i].ip = configData.ip;
                 this.config.devices[i].polling = configData.polling;
-                this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}`);
+                this.config.devices[i].id = configData.id;
+                this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}, id = ${configData.id}`);
                 this.updateConfig(this.config);
                 return;
             }
         }
         // New discovered device
         this.config.devices.push(configData);
-        this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}`);
+        this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}, id = ${configData.id}`);
         this.updateConfig(this.config);
     }
     miioAdapterInit() {
-        this.readObjects(() => {
-            this.setConnected(false);
-            if (!this.config ||
-                !this.config.devices ||
-                ("[]" === JSON.stringify(this.config.devices))) {
-                if (!this.config.autoDiscover) {
-                    this.log.error("No device defined and discover is also disabled.");
-                }
-            }
-            this.miioController = new miio.Controller({
-                devicesDefined: this.config.devices,
-                autoDiscover: this.config.autoDiscover,
-                autoDiscoverTimeout: parseInt(this.config.autoDiscoverTimeout || "30") //
-            });
-            this.miioController.on("debug", /** @param {string} msg */ /** @param {string} msg */ msg => this.log.debug(msg));
-            this.miioController.on("info", /** @param {string} msg */ /** @param {string} msg */ msg => this.log.info(msg));
-            this.miioController.on("warning", /** @param {string} msg */ /** @param {string} msg */ msg => this.log.warn(msg));
-            this.miioController.on("error", /** @param {string} msg */ /** @param {string} msg */ msg => {
-                this.log.error(msg);
-                this.miioAdapterStop();
-            });
-            // New device need add to adapter.
-            this.miioController.on("device", (/** @param {AdapterMiio.ControllerDevice} dev */ dev, /** @param {string} opt */ opt) => {
-                if (opt === "add") {
-                    if (!this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
-                        this.log.info(`New device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
-                        this.miioAdapterUpdateConfig(dev.configData);
-                        this.miioAdapterCreateDevice(dev);
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this.readObjects(() => __awaiter(this, void 0, void 0, function* () {
+                    this.setConnected(false);
+                    if (!this.config ||
+                        !this.config.devices ||
+                        ("[]" === JSON.stringify(this.config.devices))) {
+                        if (!this.config.autoDiscover) {
+                            this.log.error("No device defined and discover is also disabled.");
+                        }
                     }
-                    else {
-                        this.log.info(`Known device: ${dev.miioInfo.model} ${dev.miioInfo.id}`);
-                    }
-                }
-                else if (opt === "delete") {
-                    if (this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
-                        this.miioAdapterDeleteDevice(dev);
-                        this.log.info(`Delete device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
-                    }
-                    else {
-                        this.log.info(`Want to delete a non-registered device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
-                    }
-                }
-                else {
-                    this.log.warn(`Unsupported device event operation "${opt}".`);
-                }
+                    this.miioController = new miio.Controller({
+                        devicesDefined: this.config.devices,
+                        autoDiscover: this.config.autoDiscover,
+                        autoDiscoverTimeout: parseInt(this.config.autoDiscoverTimeout || "30")
+                    });
+                    this.miioController.on("debug", /** @param {string} msg */ /** @param {string} msg */ msg => this.log.debug(msg));
+                    this.miioController.on("info", /** @param {string} msg */ /** @param {string} msg */ msg => this.log.info(msg));
+                    this.miioController.on("warning", /** @param {string} msg */ /** @param {string} msg */ msg => this.log.warn(msg));
+                    this.miioController.on("error", /** @param {string} msg */ /** @param {string} msg */ msg => {
+                        this.log.error(msg);
+                        this.miioAdapterStop();
+                    });
+                    // New device need add to adapter.
+                    this.miioController.on("device", (/** @param {AdapterMiio.ControllerDevice} dev */ dev, /** @param {string} opt */ opt) => {
+                        if (opt === "add") {
+                            if (!this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
+                                this.log.info(`New device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                                this.miioAdapterUpdateConfig(dev.configData);
+                                this.miioAdapterCreateDevice(dev);
+                            }
+                            else {
+                                this.log.info(`Known device: ${dev.miioInfo.model} ${dev.miioInfo.id}`);
+                            }
+                        }
+                        else if (opt === "delete") {
+                            if (this.miioObjects[this.generateChannelID(dev.miioInfo.id)]) {
+                                this.miioAdapterDeleteDevice(dev);
+                                this.log.info(`Delete device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                            }
+                            else {
+                                this.log.info(`Want to delete a non-registered device: ${dev.miioInfo.model}. ID ${dev.miioInfo.id}`);
+                            }
+                        }
+                        else {
+                            this.log.warn(`Unsupported device event operation "${opt}".`);
+                        }
+                    });
+                    this.miioController.on("data", 
+                    /**
+                     * @param {string} id
+                     * @param {string} state
+                     * @param {any} val
+                     */
+                    (id, state, val) => {
+                        this.miioAdapterUpdateState(this.generateSelfChannelID(id), state, val);
+                    });
+                    yield this.miioController.listen();
+                    this.setConnected(true);
+                    resolve();
+                }));
             });
-            this.miioController.on("data", 
-            /**
-             * @param {string} id
-             * @param {string} state
-             * @param {any} val
-             */
-            (id, state, val) => {
-                this.miioAdapterUpdateState(this.generateSelfChannelID(id), state, val);
-            });
-            this.miioController.listen();
-            this.setConnected(true);
         });
     }
 }

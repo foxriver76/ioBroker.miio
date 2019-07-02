@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "miio",
-        "version": "0.0.9",
+        "version": "0.0.10",
         "news": {
+            "0.0.10": {
+                "en": "Fix can not controll device issue",
+                "de": "Fix kann Geräteproblem nicht kontrollieren",
+                "ru": "Исправление не может контролировать проблему устройства",
+                "pt": "Correção não pode controlar o problema do dispositivo",
+                "nl": "Fix kan het probleem met het apparaat niet regelen",
+                "fr": "Fix ne peut pas contrôler le problème de périphérique",
+                "it": "La correzione non può risolvere il problema del dispositivo",
+                "es": "La solución no puede controlar el problema del dispositivo",
+                "pl": "Napraw nie może kontrolować problemu z urządzeniem",
+                "zh-cn": "修复无法控制设备问题"
+            },
             "0.0.9": {
                 "en": "Fix delete device and discover devices issue",
                 "de": "Behebung eines Problems mit dem Löschen von Geräten und Ermitteln von Geräten",
