@@ -18,14 +18,27 @@ const miio = require("./lib/miio");
 class Miio extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign({}, options, { name: "miio" }));
+        /**
+         * Save latest miio adapter objects.
+         */
+        this.miioObjects = {};
+        /**
+         * Save objects that updated before created.
+         */
+        this.delayed = {};
+        /**
+         * Save objects that needed to register.
+         */
+        this.tasks = [];
+        /**
+         * miio Controller
+         * @type {}
+         */
+        this.miioController = null;
         this.on("ready", this.onReady.bind(this));
         this.on("stateChange", this.onStateChange.bind(this));
         // this.on("message", this.onMessage.bind(this));
         this.on("unload", this.onUnload.bind(this));
-        this.miioObjects = {};
-        this.delayed = {};
-        this.tasks = [];
-        this.miioController = null;
     }
     /**
      * Is called when databases are connected and adapter received configuration.
@@ -38,6 +51,7 @@ class Miio extends utils.Adapter {
             // in this template all states changes inside the adapters namespace are subscribed
             this.subscribeStates("*");
             yield this.miioAdapterInit();
+            this.log.debug(`Adapter init done!!!!!!`);
         });
     }
     /**
@@ -115,9 +129,8 @@ class Miio extends utils.Adapter {
      */
     readObjects(callback) {
         this.getForeignObjects(this.getObjectIDPrefix() + ".*", (err, list) => {
-            // Read miio objects in database. This maybe set in prevrous running status.
-            // No need set namespace
-            this.subscribeStates("devices.*");
+            // Read miio objects in database. This maybe set in previous running status.
+            // This can restore user defined object parameters.
             this.miioObjects = list;
             callback && callback();
         });
@@ -135,6 +148,9 @@ class Miio extends utils.Adapter {
     miioAdapterSyncObjects(instant) {
         function isStateObject(obj) {
             return obj.type === "state";
+        }
+        function isChannelObject(obj) {
+            return obj.type === "channel";
         }
         // This obj is obj with new value
         const obj = instant.tasks.shift();
@@ -163,7 +179,8 @@ class Miio extends utils.Adapter {
                 for (const a in obj.common) {
                     if (obj.common.hasOwnProperty(a)) {
                         if (!oObj.common[a] ||
-                            ((a != "name") && (a !== "icon") && (a !== "role") && oObj.common[a] !== obj.common[a])) {
+                            ((a != "name") && (a !== "icon") && (a !== "role") && (a !== "custom") &&
+                                oObj.common[a] !== obj.common[a])) {
                             // object value need update.
                             changed = true;
                             oObj.common[a] = obj.common[a];
@@ -173,6 +190,47 @@ class Miio extends utils.Adapter {
                 if (JSON.stringify(obj.native) !== JSON.stringify(oObj.native)) {
                     changed = true;
                     oObj.native = obj.native;
+                }
+                // The newest data is saved in oObj.
+                instant.miioObjects[instant.namespace + "." + obj._id] = oObj;
+                if (changed) {
+                    instant.extendObject(oObj._id, oObj, () => {
+                        if (instant.delayed[oObj._id] !== undefined) {
+                            instant.setState(oObj._id, instant.delayed[oObj._id], true, () => {
+                                delete instant.delayed[oObj._id];
+                                setImmediate(instant.miioAdapterSyncObjects, instant);
+                            });
+                        }
+                        else {
+                            setImmediate(instant.miioAdapterSyncObjects, instant);
+                        }
+                    });
+                }
+                else {
+                    if (instant.delayed[oObj._id] !== undefined) {
+                        instant.setState(oObj._id, instant.delayed[oObj._id], true, () => {
+                            delete instant.delayed[oObj._id];
+                            setImmediate(instant.miioAdapterSyncObjects, instant);
+                        });
+                    }
+                    else {
+                        setImmediate(instant.miioAdapterSyncObjects, instant);
+                    }
+                }
+            }
+            else if (isChannelObject(oObj) && isChannelObject(obj)) {
+                //Database contains obj._id object. Check whether update is needed.
+                let changed = false;
+                for (const a in obj.common) {
+                    if (obj.common.hasOwnProperty(a)) {
+                        if (!oObj.common[a] ||
+                            ((a != "name") && (a !== "icon") && (a !== "custom") &&
+                                oObj.common[a] !== obj.common[a])) {
+                            // object value need update.
+                            changed = true;
+                            oObj.common[a] = obj.common[a];
+                        }
+                    }
                 }
                 // The newest data is saved in oObj.
                 instant.miioObjects[instant.namespace + "." + obj._id] = oObj;
