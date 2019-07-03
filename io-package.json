@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "miio",
-        "version": "0.0.10",
+        "version": "0.0.11",
         "news": {
+            "0.0.11": {
+                "en": "Remove unused function",
+                "de": "Nicht verwendete Funktion entfernen",
+                "ru": "Удалить неиспользуемую функцию",
+                "pt": "Remova a função não utilizada",
+                "nl": "Verwijder ongebruikte functie",
+                "fr": "Supprimer la fonction inutilisée",
+                "it": "Rimuovi la funzione non utilizzata",
+                "es": "Eliminar la función no utilizada",
+                "pl": "Usuń nieużywaną funkcję",
+                "zh-cn": "删除未使用的功能"
+            },
             "0.0.10": {
                 "en": "Fix can not controll device issue",
                 "de": "Fix kann Geräteproblem nicht kontrollieren",
