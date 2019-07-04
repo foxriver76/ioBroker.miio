@@ -1183,6 +1183,7 @@ class Depth extends MiioProperty {
             desc: "The remaining amount of water in percent",
             min: 0,
             max: 100,
+            mapper: v => v / 1.2,
             unit: "%",
             type: "number"
         });
