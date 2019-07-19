@@ -49,6 +49,9 @@ class MiioAdapterDevice extends events_1.EventEmitter {
             }
         }, MiioAdapterDevice.transState(this.rwState, this.roState, this.woState));
     }
+    get channels() {
+        return {};
+    }
     static transState(rw, ro, wo) {
         const states = {};
         for (const k in rw) {

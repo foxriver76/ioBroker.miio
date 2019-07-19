@@ -43,7 +43,8 @@ class SetPower extends MiioCommand {
                     obj: {
                         true: "on",
                         false: "off"
-                    }
+                    },
+                    role: "switch"
                 }]
         });
     }
@@ -285,7 +286,8 @@ class SetTempeSetup extends MiioCommand {
                     min: 1,
                     max: 100,
                     unit: "°C",
-                    type: "number"
+                    type: "number",
+                    role: "level"
                 }]
         });
     }
@@ -334,7 +336,8 @@ class SetBright extends MiioCommand {
             para: [{
                     min: 0,
                     max: 100,
-                    type: "number"
+                    type: "number",
+                    role: "level.brightness"
                 }]
         });
     }
@@ -365,7 +368,8 @@ class SetCtAbx extends MiioCommand {
                     //kelvin
                     min: 1700,
                     max: 6500,
-                    type: "number"
+                    type: "number",
+                    role: "level.color.temperature"
                 }, {
                     //mode
                     type: "string",
@@ -391,7 +395,8 @@ class SetRgb extends MiioCommand {
             name: "set rgb",
             desc: "Set color in RGB",
             para: [{
-                    type: "string"
+                    type: "string",
+                    role: "level.color.rgb"
                 }]
         });
     }
@@ -452,7 +457,8 @@ class SetWifiLed extends MiioCommand {
                     obj: {
                         true: "on",
                         false: "off"
-                    }
+                    },
+                    role: "switch"
                 }]
         });
     }
@@ -487,7 +493,8 @@ class SetPowerChuangmiPlugV3 extends MiioCommand {
                     obj: {
                         true: new SetOn(),
                         false: new SetOff()
-                    }
+                    },
+                    role: "switch"
                 }]
         });
     }
@@ -522,7 +529,8 @@ class SetUsbPowerChuangmiPlugV3 extends MiioCommand {
                     obj: {
                         true: new SetUsbOn(),
                         false: new SetUsbOff()
-                    }
+                    },
+                    role: "switch"
                 }]
         });
     }
@@ -540,7 +548,8 @@ class EnableAmb extends MiioCommand {
                     obj: {
                         true: "on",
                         false: "off"
-                    }
+                    },
+                    role: "switch"
                 }]
         });
     }
@@ -555,7 +564,8 @@ class SetAmbBright extends MiioCommand {
             para: [{
                     min: 1,
                     max: 100,
-                    type: "number"
+                    type: "number",
+                    role: "level.brightness"
                 }]
         });
     }
@@ -573,7 +583,8 @@ class SetEyeCare extends MiioCommand {
                     obj: {
                         true: "on",
                         false: "off"
-                    }
+                    },
+                    role: "switch"
                 }]
         });
     }

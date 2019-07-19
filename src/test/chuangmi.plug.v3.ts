@@ -55,7 +55,7 @@ export async function testFunc(controller: miio.Controller) {
                     "write": false,
                     "read": true,
                     "name": "temperature",
-                    "role": "state",
+                    "role": "temperature",
                     "type": "number",
                     "unit": "°C"
                 },

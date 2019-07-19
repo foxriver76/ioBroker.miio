@@ -31,6 +31,9 @@ class MiioProperty {
             if (opt.unit !== undefined) {
                 this.statePara.unit = opt.unit;
             }
+            if (opt.role !== undefined) {
+                this.statePara.role = opt.role;
+            }
         }
     }
 }
@@ -179,6 +182,7 @@ class TempDec extends MiioProperty {
             desc: "Current temperature. Need divided by 10",
             unit: "°C",
             type: "number",
+            role: "temperature",
             mapper: v => v / 10,
         });
     }
@@ -191,7 +195,8 @@ class Humidity extends MiioProperty {
             name: "humidity",
             desc: "Current humidity",
             unit: "%",
-            type: "number"
+            type: "number",
+            role: "humidity"
         });
     }
 }
@@ -585,7 +590,8 @@ class Temperature extends MiioProperty {
             name: "temperature",
             desc: "Current temperature.",
             unit: "°C",
-            type: "number"
+            type: "number",
+            role: "temperature"
         });
     }
 }
@@ -1052,7 +1058,8 @@ class Bri extends MiioProperty {
             min: 0,
             max: 100,
             unit: "%",
-            type: "number"
+            type: "number",
+            role: "level.brightness"
         });
     }
 }

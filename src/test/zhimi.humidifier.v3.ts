@@ -79,7 +79,7 @@ export async function testFunc(controller: miio.Controller) {
                     "write": false,
                     "read": true,
                     "name": "temperature",
-                    "role": "state",
+                    "role": "temperature",
                     "type": "number",
                     "unit": "°C"
                 },
@@ -87,7 +87,7 @@ export async function testFunc(controller: miio.Controller) {
                     "write": false,
                     "read": true,
                     "name": "humidity",
-                    "role": "state",
+                    "role": "humidity",
                     "type": "number",
                     "unit": "%"
                 },
