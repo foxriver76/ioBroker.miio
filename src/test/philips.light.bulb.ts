@@ -35,7 +35,7 @@ export async function testFunc(controller: miio.Controller) {
                     "min": 0,
                     "name": "brightness",
                     "read": true,
-                    "role": "state",
+                    "role": "level.brightness",
                     "type": "number",
                     "unit": "%",
                     "write": true
@@ -53,7 +53,7 @@ export async function testFunc(controller: miio.Controller) {
                 "power": {
                     "name": "power",
                     "read": true,
-                    "role": "state",
+                    "role": "switch",
                     "type": "boolean",
                     "write": true
                 }

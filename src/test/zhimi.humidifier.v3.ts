@@ -34,7 +34,7 @@ export async function testFunc(controller: miio.Controller) {
                     "write": true,
                     "read": true,
                     "name": "power",
-                    "role": "state",
+                    "role": "switch",
                     "type": "boolean"
                 },
                 "mode": {

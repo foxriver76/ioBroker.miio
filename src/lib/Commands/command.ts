@@ -48,6 +48,9 @@ export class MiioCommand {
                 if (this.para[0].unit !== undefined) {
                     this.statePara.unit = this.para[0].unit;
                 }
+                if (this.para[0].role !== undefined) {
+                    this.statePara.role = this.para[0].role;
+                }
             }
         }
     }

@@ -34,21 +34,21 @@ export async function testFunc(controller: miio.Controller) {
                     "write": true,
                     "read": true,
                     "name": "power",
-                    "role": "state",
+                    "role": "switch",
                     "type": "boolean"
                 },
                 "usbPower": {
                     "write": true,
                     "read": true,
                     "name": "usbPower",
-                    "role": "state",
+                    "role": "switch",
                     "type": "boolean"
                 },
                 "wifiLed": {
                     "write": true,
                     "read": true,
                     "name": "wifiLed",
-                    "role": "state",
+                    "role": "switch",
                     "type": "boolean"
                 },
                 "temperature": {
