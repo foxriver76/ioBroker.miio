@@ -15,6 +15,7 @@ export interface MiioPropertyOpt {
     min?: number;
     max?: number;
     unit?: string;
+    role?: string;
     obj?: Record<string, number|string|boolean>;
     statePara?: MiioPropertyPara;
     enum?: (string|number)[];
@@ -62,6 +63,9 @@ export class MiioProperty {
             }
             if (opt.unit !== undefined) {
                 this.statePara.unit = opt.unit;
+            }
+            if (opt.role !== undefined) {
+                this.statePara.role = opt.role;
             }
         }
     }
@@ -200,6 +204,7 @@ export class TempDec extends MiioProperty {
             desc: "Current temperature. Need divided by 10",
             unit: "°C",
             type: "number",
+            role: "temperature",
             mapper: v => v/10,
         });
     }
@@ -211,7 +216,8 @@ export class Humidity extends MiioProperty {
             name: "humidity",
             desc: "Current humidity",
             unit: "%",
-            type: "number"
+            type: "number",
+            role: "humidity"
         });
     }
 };
@@ -575,7 +581,8 @@ export class Temperature extends MiioProperty {
             name: "temperature",
             desc: "Current temperature.",
             unit: "°C",
-            type: "number"
+            type: "number",
+            role: "temperature"
         });
     }
 };
@@ -1004,7 +1011,8 @@ export class Bri extends MiioProperty {
             min: 0,
             max: 100,
             unit: "%",
-            type: "number"
+            type: "number",
+            role: "level.brightness"
         });
     }
 };

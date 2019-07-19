@@ -59,6 +59,10 @@ export class MiioAdapterDevice extends EventEmitter {
         }, MiioAdapterDevice.transState(this.rwState, this.roState, this.woState));
     }
 
+    public get channels(): Record<string, string[]> {
+        return {};
+    }
+
     public static transState(rw: Record<string, MiioAdapterRWState>,
                              ro: Record<string, MiioAdapterROState>,
                              wo: Record<string, MiioAdapterWOState>) {

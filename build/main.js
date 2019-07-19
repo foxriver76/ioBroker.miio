@@ -276,6 +276,36 @@ class Miio extends utils.Adapter {
         const id = this.generateSelfChannelID(dev.miioInfo.id);
         const isInitTasks = !this.tasks.length;
         const states = dev.device.states;
+        const channels = dev.device.channels;
+        for (const channel in channels) {
+            if (!channels.hasOwnProperty(channel))
+                continue;
+            if (channels[channel].length === 0)
+                continue;
+            const channelStates = channels[channel];
+            for (let i = 0; i < channelStates.length; i++) {
+                const channelStatesName = channelStates[i];
+                if (typeof states[channelStatesName] === "undefined")
+                    continue;
+                this.log.info(`Create channel state object ${id}.${channel}.${channelStatesName}`);
+                this.tasks.push({
+                    _id: `${id}.${channel}.${channelStatesName}`,
+                    common: states[channelStatesName],
+                    type: "state",
+                    native: {}
+                });
+                delete states[channelStatesName];
+            }
+            this.log.info(`Create channel object ${id}.${channel}`);
+            this.tasks.push({
+                _id: `${id}.${channel}`,
+                common: {
+                    name: channel,
+                },
+                type: "channel",
+                native: {}
+            });
+        }
         for (const state in states) {
             if (!states.hasOwnProperty(state))
                 continue;
@@ -293,7 +323,7 @@ class Miio extends utils.Adapter {
                 name: dev.configData.name || dev.miioInfo.model,
                 icon: `/icons/${dev.miioInfo.model}.png`
             },
-            type: "channel",
+            type: "device",
             native: {
                 id: dev.miioInfo.id,
                 model: dev.miioInfo.model
