@@ -40,3 +40,5 @@ test.js
 .github/
 lib/Properties/generate.py
 lib/Properties/proplist
+
+.DS_Store
