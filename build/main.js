@@ -363,14 +363,14 @@ class Miio extends utils.Adapter {
                 this.config.devices[i].polling = configData.polling;
                 this.config.devices[i].id = configData.id;
                 this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}, id = ${configData.id}`);
-                this.updateConfig(this.config);
+                this.updateConfig && this.updateConfig(this.config);
                 return;
             }
         }
         // New discovered device
         this.config.devices.push(configData);
         this.log.info(`Update Device ${configData.name}'s config: ip = ${configData.ip}, polling = ${configData.polling}, id = ${configData.id}`);
-        this.updateConfig(this.config);
+        this.updateConfig && this.updateConfig(this.config);
     }
     miioAdapterInit() {
         return __awaiter(this, void 0, void 0, function* () {
