@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "miio",
-        "version": "0.0.12",
+        "version": "0.0.13",
         "news": {
+            "0.0.13": {
+                "en": "Fix device can not control after adapter restart",
+                "de": "Fix Gerät kann nach Adapter-Neustart nicht kontrollieren",
+                "ru": "Исправить устройство не может контролировать после перезагрузки адаптера",
+                "pt": "O dispositivo de correção não pode controlar após a reinicialização do adaptador",
+                "nl": "Fix-apparaat kan niet controleren nadat de adapter opnieuw is opgestart",
+                "fr": "Le périphérique fixe ne peut pas contrôler après le redémarrage de l'adaptateur",
+                "it": "Il dispositivo di correzione non può controllare dopo il riavvio dell'adattatore",
+                "es": "El dispositivo fijo no puede controlar después de reiniciar el adaptador",
+                "pl": "Napraw urządzenie nie może kontrolować po ponownym uruchomieniu adaptera",
+                "zh-cn": "修复适配器重启后，设备无法控制"
+            },
             "0.0.12": {
                 "en": "Change channel object to device object",
                 "de": "Kanalobjekt in Geräteobjekt ändern",
