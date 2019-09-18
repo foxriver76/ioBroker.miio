@@ -152,6 +152,9 @@ class Miio extends utils.Adapter {
         function isChannelObject(obj) {
             return obj.type === "channel";
         }
+        function isDeviceObject(obj) {
+            return obj.type === "device";
+        }
         // This obj is obj with new value
         const obj = instant.tasks.shift();
         if (obj === undefined) {
@@ -218,7 +221,8 @@ class Miio extends utils.Adapter {
                     }
                 }
             }
-            else if (isChannelObject(oObj) && isChannelObject(obj)) {
+            else if ((isChannelObject(oObj) && isChannelObject(obj)) ||
+                (isDeviceObject(oObj) && isDeviceObject(obj))) {
                 //Database contains obj._id object. Check whether update is needed.
                 let changed = false;
                 for (const a in obj.common) {
